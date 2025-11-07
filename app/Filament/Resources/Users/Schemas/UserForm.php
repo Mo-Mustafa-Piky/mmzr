@@ -43,6 +43,7 @@ class UserForm
                         Select::make('roles')
                             ->relationship('roles', 'name')
                             ->multiple()
+                            ->maxItems(1)
                             ->preload()
                             ->searchable()
                             ->placeholder('Select roles')

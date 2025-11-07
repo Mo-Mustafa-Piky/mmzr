@@ -24,7 +24,7 @@ class UsersTable
                     ->searchable()
                     ->sortable()
                     ->weight(FontWeight::Bold)
-                    ->icon('heroicon-o-user'),
+                   ,
                 TextColumn::make('email')
                     ->searchable()
                     ->sortable()
