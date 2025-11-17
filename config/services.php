@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+     'goyzer' => [
+        'access_code' => env('GOYZER_ACCESS_CODE'),
+        'group_code' => env('GOYZER_GROUP_CODE'),
+    ],
+
 ];
