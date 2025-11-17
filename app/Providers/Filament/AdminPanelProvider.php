@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('MMZR')
+            ->brandName('MMZR Website')
             ->colors([
                 'primary' => Color::Blue,
             ])
