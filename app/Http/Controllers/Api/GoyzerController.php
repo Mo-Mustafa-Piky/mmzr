@@ -79,55 +79,29 @@ class GoyzerController extends Controller
     }
 
     /**
-     * Get properties with filters
+     * Get properties from database with real pagination
      */
     public function getProperties(Request $request)
     {
-        $query = Property::query();
-
-        // Filter by type
-        if ($request->has('type')) {
-            $query->where('type', $request->type);
-        }
-
-        // Filter by status
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        } else {
-            $query->where('status', 'active');
-        }
-
-        // Filter by bedrooms
-        if ($request->has('bedrooms')) {
-            $query->where('bedrooms', $request->bedrooms);
-        }
-
-        // Filter by price range
-        if ($request->has('min_price') && $request->has('max_price')) {
-            if ($request->type === 'sale') {
-                $query->whereBetween('selling_price', [$request->min_price, $request->max_price]);
-            } else {
-                $query->whereBetween('rent_per_annum', [$request->min_price, $request->max_price]);
-            }
-        }
-
-        // Filter by location
-        if ($request->has('city')) {
-            $query->where('city', $request->city);
-        }
-
-        if ($request->has('community')) {
-            $query->where('community', $request->community);
-        }
-
-        // Filter by unit type
-        if ($request->has('unit_type')) {
-            $query->where('unit_type', $request->unit_type);
-        }
-
-        $properties = $query->paginate($request->get('per_page', 15));
-
-        return response()->json($properties);
+        $startTime = microtime(true);
+        
+        $perPage = max(1, min(100, (int) $request->get('per_page', 15)));
+        
+        $paginated = \Illuminate\Support\Facades\DB::table('goyzer_properties')
+            ->paginate($perPage);
+        
+        $data = $paginated->map(fn($item) => json_decode($item->data, true));
+        
+        $executionTime = round((microtime(true) - $startTime) * 1000, 2);
+        
+        return response()->json([
+            'data' => $data,
+            'current_page' => $paginated->currentPage(),
+            'per_page' => $paginated->perPage(),
+            'total' => $paginated->total(),
+            'last_page' => $paginated->lastPage(),
+            'execution_time_ms' => $executionTime
+        ]);
     }
 
     /**

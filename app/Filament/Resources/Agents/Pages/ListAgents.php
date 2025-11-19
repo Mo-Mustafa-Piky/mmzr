@@ -12,6 +12,8 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 
 class ListAgents extends Page implements HasTable
 {
@@ -19,6 +21,22 @@ class ListAgents extends Page implements HasTable
     
     protected static string $resource = AgentResource::class;
     protected string $view = 'filament.resources.agents.pages.list-agents';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_agents');
+                    Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -64,8 +82,9 @@ class ListAgents extends Page implements HasTable
 
     protected function getAgentsData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getAgents();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_agents', 3600, function () {
+            return app(GoyzerService::class)->getAgents();
+        });
         
         if (!$result || !isset($result['GetAgentData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);

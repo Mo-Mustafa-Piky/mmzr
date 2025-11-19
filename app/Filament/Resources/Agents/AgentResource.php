@@ -12,7 +12,7 @@ class AgentResource extends Resource
 {
     protected static ?string $model = \App\Models\Agent::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Agents';
 
     public static function getPages(): array

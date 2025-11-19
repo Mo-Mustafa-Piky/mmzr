@@ -12,7 +12,7 @@ class BudgetByCountryResource extends Resource
 {
     protected static ?string $model = \App\Models\BudgetByCountry::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedGlobeAlt;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Budgets by Country';
 
     public static function getPages(): array

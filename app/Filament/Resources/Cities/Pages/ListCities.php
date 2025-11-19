@@ -11,8 +11,8 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 class ListCities extends Page implements HasTable
 {
@@ -20,6 +20,22 @@ class ListCities extends Page implements HasTable
     
     protected static string $resource = CityResource::class;
     protected string $view = 'filament.resources.cities.pages.list-cities';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_cities');
+                    \Filament\Notifications\Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -52,8 +68,10 @@ class ListCities extends Page implements HasTable
 
     protected function getCitiesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getCities();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_cities', 3600, function () {
+            $goyzerService = app(GoyzerService::class);
+            return $goyzerService->getCities();
+        });
         
         if (!$result || !isset($result['GetCityData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);
@@ -94,44 +112,34 @@ class ListCities extends Page implements HasTable
 
     protected function getStateName(string $stateId): string
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getStates();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_states', 3600, function () {
+            return app(GoyzerService::class)->getStates();
+        });
         
-        if (!$result || !isset($result['GetStateData'])) {
-            return $stateId;
-        }
-
-        $states = is_array($result['GetStateData']) && isset($result['GetStateData'][0]) 
-            ? $result['GetStateData'] 
-            : [$result['GetStateData']];
-
+        if (!$result || !isset($result['GetStateData'])) return $stateId;
+        
+        $states = is_array($result['GetStateData']) && isset($result['GetStateData'][0]) ? $result['GetStateData'] : [$result['GetStateData']];
+        
         foreach ($states as $state) {
-            if (($state['StateID'] ?? '') === $stateId) {
-                return $state['StateName'] ?? $stateId;
-            }
+            if (($state['StateID'] ?? '') === $stateId) return $state['StateName'] ?? $stateId;
         }
-
         return $stateId;
     }
 
     protected function getStateOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getStates();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_states', 3600, function () {
+            return app(GoyzerService::class)->getStates();
+        });
         
-        if (!$result || !isset($result['GetStateData'])) {
-            return [];
-        }
-
-        $states = is_array($result['GetStateData']) && isset($result['GetStateData'][0]) 
-            ? $result['GetStateData'] 
-            : [$result['GetStateData']];
-
+        if (!$result || !isset($result['GetStateData'])) return [];
+        
+        $states = is_array($result['GetStateData']) && isset($result['GetStateData'][0]) ? $result['GetStateData'] : [$result['GetStateData']];
+        
         $options = [];
         foreach ($states as $state) {
             $options[$state['StateID'] ?? ''] = $state['StateName'] ?? '';
         }
-
         return $options;
     }
 }

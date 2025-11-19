@@ -13,6 +13,8 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 
 class ListBudgetsByCountry extends Page implements HasTable
 {
@@ -20,6 +22,22 @@ class ListBudgetsByCountry extends Page implements HasTable
     
     protected static string $resource = BudgetByCountryResource::class;
     protected string $view = 'filament.resources.budgets-by-country.pages.list-budgets-by-country';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_budgets_by_country');
+                    Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -82,8 +100,9 @@ class ListBudgetsByCountry extends Page implements HasTable
 
     protected function getBudgetsByCountryData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getBudgetByCountry();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_budgets_by_country', 3600, function () {
+            return app(GoyzerService::class)->getBudgetByCountry();
+        });
         
         if (!$result || !isset($result['GetBudgetByCountryData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);

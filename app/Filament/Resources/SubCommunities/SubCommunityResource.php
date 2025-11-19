@@ -12,7 +12,7 @@ class SubCommunityResource extends Resource
 {
     protected static ?string $model = \App\Models\SubCommunity::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingLibrary;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Sub-Communities';
 
     public static function getPages(): array

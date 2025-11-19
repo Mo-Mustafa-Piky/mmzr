@@ -10,6 +10,8 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 
 class ListUnitCategories extends Page implements HasTable
 {
@@ -17,6 +19,22 @@ class ListUnitCategories extends Page implements HasTable
     
     protected static string $resource = UnitCategoryResource::class;
     protected string $view = 'filament.resources.unit-categories.pages.list-unit-categories';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_unit_categories');
+                    Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -37,8 +55,9 @@ class ListUnitCategories extends Page implements HasTable
 
     protected function getUnitCategoriesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getUnitCategory();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_unit_categories', 3600, function () {
+            return app(GoyzerService::class)->getUnitCategory();
+        });
         
         if (!$result || !isset($result['GetUnitCategoryData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);

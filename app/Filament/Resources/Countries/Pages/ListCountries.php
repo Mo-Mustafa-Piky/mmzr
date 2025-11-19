@@ -9,8 +9,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 class ListCountries extends Page implements HasTable
 {
@@ -18,6 +18,22 @@ class ListCountries extends Page implements HasTable
     
     protected static string $resource = CountryResource::class;
     protected string $view = 'filament.resources.countries.pages.list-countries';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_countries');
+                    \Filament\Notifications\Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -42,8 +58,10 @@ class ListCountries extends Page implements HasTable
 
     protected function getCountriesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getCountry();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_countries', 3600, function () {
+            $goyzerService = app(GoyzerService::class);
+            return $goyzerService->getCountry();
+        });
         
         if (!$result || !isset($result['GetCountryData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);

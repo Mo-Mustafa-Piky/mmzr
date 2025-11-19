@@ -12,7 +12,7 @@ class UnitCategoryResource extends Resource
 {
     protected static ?string $model = \App\Models\UnitCategory::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Unit Categories';
 
     public static function getPages(): array

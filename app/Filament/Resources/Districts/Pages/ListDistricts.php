@@ -11,6 +11,8 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 
 class ListDistricts extends Page implements HasTable
 {
@@ -18,6 +20,22 @@ class ListDistricts extends Page implements HasTable
     
     protected static string $resource = DistrictResource::class;
     protected string $view = 'filament.resources.districts.pages.list-districts';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_districts');
+                    Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -50,8 +68,9 @@ class ListDistricts extends Page implements HasTable
 
     protected function getDistrictsData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getDistricts();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_districts', 3600, function () {
+            return app(GoyzerService::class)->getDistricts();
+        });
         
         if (!$result || !isset($result['GetDistrictData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);
@@ -84,8 +103,9 @@ class ListDistricts extends Page implements HasTable
 
     protected function getCityName(string $cityId): string
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getCities();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_cities', 3600, function () {
+            return app(GoyzerService::class)->getCities();
+        });
         
         if (!$result || !isset($result['GetCityData'])) {
             return $cityId;
@@ -106,8 +126,9 @@ class ListDistricts extends Page implements HasTable
 
     protected function getCityOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getCities();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_cities', 3600, function () {
+            return app(GoyzerService::class)->getCities();
+        });
         
         if (!$result || !isset($result['GetCityData'])) {
             return [];

@@ -10,6 +10,8 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 
 class ListTitles extends Page implements HasTable
 {
@@ -17,6 +19,22 @@ class ListTitles extends Page implements HasTable
     
     protected static string $resource = TitleResource::class;
     protected string $view = 'filament.resources.titles.pages.list-titles';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_titles');
+                    Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -37,8 +55,9 @@ class ListTitles extends Page implements HasTable
 
     protected function getTitlesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getTitle();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_titles', 3600, function () {
+            return app(GoyzerService::class)->getTitle();
+        });
         
         if (!$result || !isset($result['GetTitleData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);

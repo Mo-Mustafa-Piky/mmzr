@@ -12,7 +12,7 @@ class AmenityResource extends Resource
 {
     protected static ?string $model = \App\Models\Amenity::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSparkles;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Amenities';
 
     public static function getPages(): array

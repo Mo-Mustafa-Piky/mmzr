@@ -12,7 +12,7 @@ class RequirementTypeResource extends Resource
 {
     protected static ?string $model = \App\Models\RequirementType::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Requirement Types';
 
     public static function getPages(): array

@@ -12,7 +12,7 @@ class ContactMethodResource extends Resource
 {
     protected static ?string $model = \App\Models\ContactMethod::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Contact Methods';
 
     public static function getPages(): array

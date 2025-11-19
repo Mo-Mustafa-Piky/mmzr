@@ -10,6 +10,8 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 
 class ListFacilities extends Page implements HasTable
 {
@@ -17,6 +19,22 @@ class ListFacilities extends Page implements HasTable
     
     protected static string $resource = FacilityResource::class;
     protected string $view = 'filament.resources.facilities.pages.list-facilities';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_facilities');
+                    Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -37,8 +55,9 @@ class ListFacilities extends Page implements HasTable
 
     protected function getFacilitiesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getFacility();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_facilities', 3600, function () {
+            return app(GoyzerService::class)->getFacility();
+        });
         
         if (!$result || !isset($result['GetFacilityData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);

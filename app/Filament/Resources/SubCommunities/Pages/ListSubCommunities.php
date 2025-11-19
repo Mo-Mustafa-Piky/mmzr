@@ -10,6 +10,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListSubCommunities extends Page implements HasTable
@@ -18,6 +19,22 @@ class ListSubCommunities extends Page implements HasTable
     
     protected static string $resource = SubCommunityResource::class;
     protected string $view = 'filament.resources.sub-communities.pages.list-sub-communities';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_sub_communities');
+                    \Filament\Notifications\Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -50,8 +67,10 @@ class ListSubCommunities extends Page implements HasTable
 
     protected function getSubCommunitiesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getSubCommunity();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_sub_communities', 3600, function () {
+            $goyzerService = app(GoyzerService::class);
+            return $goyzerService->getSubCommunity();
+        });
         
         if (!$result || !isset($result['GetSubCommunityData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);
@@ -84,44 +103,34 @@ class ListSubCommunities extends Page implements HasTable
 
     protected function getCommunityName(string $communityId): string
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getCommunities();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_communities', 3600, function () {
+            return app(GoyzerService::class)->getCommunities();
+        });
         
-        if (!$result || !isset($result['GetCommunityData'])) {
-            return $communityId;
-        }
-
-        $communities = is_array($result['GetCommunityData']) && isset($result['GetCommunityData'][0]) 
-            ? $result['GetCommunityData'] 
-            : [$result['GetCommunityData']];
-
+        if (!$result || !isset($result['GetCommunityData'])) return $communityId;
+        
+        $communities = is_array($result['GetCommunityData']) && isset($result['GetCommunityData'][0]) ? $result['GetCommunityData'] : [$result['GetCommunityData']];
+        
         foreach ($communities as $community) {
-            if (($community['CommunityID'] ?? '') === $communityId) {
-                return $community['CommunityName'] ?? $communityId;
-            }
+            if (($community['CommunityID'] ?? '') === $communityId) return $community['CommunityName'] ?? $communityId;
         }
-
         return $communityId;
     }
 
     protected function getCommunityOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getCommunities();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_communities', 3600, function () {
+            return app(GoyzerService::class)->getCommunities();
+        });
         
-        if (!$result || !isset($result['GetCommunityData'])) {
-            return [];
-        }
-
-        $communities = is_array($result['GetCommunityData']) && isset($result['GetCommunityData'][0]) 
-            ? $result['GetCommunityData'] 
-            : [$result['GetCommunityData']];
-
+        if (!$result || !isset($result['GetCommunityData'])) return [];
+        
+        $communities = is_array($result['GetCommunityData']) && isset($result['GetCommunityData'][0]) ? $result['GetCommunityData'] : [$result['GetCommunityData']];
+        
         $options = [];
         foreach ($communities as $community) {
             $options[$community['CommunityID'] ?? ''] = $community['CommunityName'] ?? '';
         }
-
         return $options;
     }
 }

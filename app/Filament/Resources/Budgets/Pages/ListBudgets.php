@@ -13,6 +13,8 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 
 class ListBudgets extends Page implements HasTable
 {
@@ -20,6 +22,22 @@ class ListBudgets extends Page implements HasTable
     
     protected static string $resource = BudgetResource::class;
     protected string $view = 'filament.resources.budgets.pages.list-budgets';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_budgets');
+                    Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -61,8 +79,9 @@ class ListBudgets extends Page implements HasTable
 
     protected function getBudgetsData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getBudget();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_budgets', 3600, function () {
+            return app(GoyzerService::class)->getBudget();
+        });
         
         if (!$result || !isset($result['GetBudgetData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);

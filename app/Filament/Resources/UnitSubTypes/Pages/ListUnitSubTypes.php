@@ -10,6 +10,8 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 
 class ListUnitSubTypes extends Page implements HasTable
 {
@@ -17,6 +19,22 @@ class ListUnitSubTypes extends Page implements HasTable
     
     protected static string $resource = UnitSubTypeResource::class;
     protected string $view = 'filament.resources.unit-sub-types.pages.list-unit-sub-types';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_unit_sub_types');
+                    Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -41,8 +59,9 @@ class ListUnitSubTypes extends Page implements HasTable
 
     protected function getUnitSubTypesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getUnitSubType();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_unit_sub_types', 3600, function () {
+            return app(GoyzerService::class)->getUnitSubType();
+        });
         
         if (!$result || !isset($result['GetUnitSubTypeData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);

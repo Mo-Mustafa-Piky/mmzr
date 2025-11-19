@@ -12,7 +12,7 @@ class TitleResource extends Resource
 {
     protected static ?string $model = \App\Models\Title::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedIdentification;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Titles';
 
     public static function getPages(): array

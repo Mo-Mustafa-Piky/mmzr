@@ -11,8 +11,8 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 class ListStates extends Page implements HasTable
 {
@@ -20,6 +20,22 @@ class ListStates extends Page implements HasTable
     
     protected static string $resource = StateResource::class;
     protected string $view = 'filament.resources.states.pages.list-states';
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clear_cache')
+                ->label('Clear Cache')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::forget('goyzer_states');
+                    \Filament\Notifications\Notification::make()
+                        ->title('Cache cleared successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
 
     public function table(Table $table): Table
     {
@@ -52,8 +68,10 @@ class ListStates extends Page implements HasTable
 
     protected function getStatesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getStates();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_states', 3600, function () {
+            $goyzerService = app(GoyzerService::class);
+            return $goyzerService->getStates();
+        });
         
         if (!$result || !isset($result['GetStateData'])) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);
@@ -94,44 +112,34 @@ class ListStates extends Page implements HasTable
 
     protected function getCountryName(string $countryId): string
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getCountry();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_countries', 3600, function () {
+            return app(GoyzerService::class)->getCountry();
+        });
         
-        if (!$result || !isset($result['GetCountryData'])) {
-            return $countryId;
-        }
-
-        $countries = is_array($result['GetCountryData']) && isset($result['GetCountryData'][0]) 
-            ? $result['GetCountryData'] 
-            : [$result['GetCountryData']];
-
+        if (!$result || !isset($result['GetCountryData'])) return $countryId;
+        
+        $countries = is_array($result['GetCountryData']) && isset($result['GetCountryData'][0]) ? $result['GetCountryData'] : [$result['GetCountryData']];
+        
         foreach ($countries as $country) {
-            if (($country['CountryID'] ?? '') === $countryId) {
-                return $country['CountryName'] ?? $countryId;
-            }
+            if (($country['CountryID'] ?? '') === $countryId) return $country['CountryName'] ?? $countryId;
         }
-
         return $countryId;
     }
 
     protected function getCountryOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getCountry();
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_countries', 3600, function () {
+            return app(GoyzerService::class)->getCountry();
+        });
         
-        if (!$result || !isset($result['GetCountryData'])) {
-            return [];
-        }
-
-        $countries = is_array($result['GetCountryData']) && isset($result['GetCountryData'][0]) 
-            ? $result['GetCountryData'] 
-            : [$result['GetCountryData']];
-
+        if (!$result || !isset($result['GetCountryData'])) return [];
+        
+        $countries = is_array($result['GetCountryData']) && isset($result['GetCountryData'][0]) ? $result['GetCountryData'] : [$result['GetCountryData']];
+        
         $options = [];
         foreach ($countries as $country) {
             $options[$country['CountryID'] ?? ''] = $country['CountryName'] ?? '';
         }
-
         return $options;
     }
 }

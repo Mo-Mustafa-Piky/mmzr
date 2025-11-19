@@ -12,7 +12,7 @@ class StateResource extends Resource
 {
     protected static ?string $model = \App\Models\State::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'States';
 
     public static function getPages(): array

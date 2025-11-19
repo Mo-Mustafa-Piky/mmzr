@@ -12,7 +12,7 @@ class CityResource extends Resource
 {
     protected static ?string $model = \App\Models\City::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Cities';
 
     public static function getPages(): array

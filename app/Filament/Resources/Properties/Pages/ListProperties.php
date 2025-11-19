@@ -14,6 +14,8 @@ use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 
 class ListProperties extends Page implements HasTable
 {
@@ -22,11 +24,31 @@ class ListProperties extends Page implements HasTable
     protected static string $resource = PropertiesResource::class;
     protected string $view = 'filament.resources.properties.pages.list-properties';
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('sync')
+                ->label('Sync from Goyzer')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    \Illuminate\Support\Facades\Artisan::call('goyzer:sync-properties');
+                    Notification::make()
+                        ->title('Properties synced successfully')
+                        ->success()
+                        ->send();
+                })
+        ];
+    }
+
     public function table(Table $table): Table
     {
         return $table
             ->records(fn (?string $search = null, ?array $filters = null, ?int $page = null, ?int $recordsPerPage = null): LengthAwarePaginator => $this->getPropertiesData($search, $filters ?? [], $page ?? 1, $recordsPerPage ?? 10))
             ->columns([
+                TextColumn::make('Images')
+                    ->label('Images')
+                    ->default('No images')
+                    ->toggleable(),
                 TextColumn::make('code')
                     ->label('Code')
                     ->sortable()
@@ -152,6 +174,63 @@ class ListProperties extends Page implements HasTable
                     ->label('Escrow Account')
                     ->sortable()
                     ->toggleable(),
+                TextColumn::make('Remarks')
+                    ->label('Remarks')
+                    ->sortable()
+                    ->toggleable()
+                    ->limit(50),
+                TextColumn::make('UniqueSellingPoints')
+                    ->label('USP')
+                    ->sortable()
+                    ->toggleable()
+                    ->limit(50),
+                TextColumn::make('CountryCode')
+                    ->label('Country Code')
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('PropertyOverView')
+                    ->label('Overview')
+                    ->sortable()
+                    ->toggleable()
+                    ->limit(50),
+                TextColumn::make('DeveloperDesc')
+                    ->label('Developer')
+                    ->sortable()
+                    ->toggleable()
+                    ->limit(50),
+                TextColumn::make('PropertyOwnerShipDesc')
+                    ->label('Ownership')
+                    ->sortable()
+                    ->toggleable()
+                    ->limit(50),
+                TextColumn::make('CountryID')
+                    ->label('Country ID')
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('StateID')
+                    ->label('State ID')
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('CityID')
+                    ->label('City ID')
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('DistrictID')
+                    ->label('District ID')
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('CommunityID')
+                    ->label('Community ID')
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('SubCommunityID')
+                    ->label('Sub Community ID')
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('AgentID')
+                    ->label('Agent ID')
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('Community')
@@ -193,18 +272,15 @@ class ListProperties extends Page implements HasTable
 
     protected function getPropertiesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getProperties();
+        $query = \Illuminate\Support\Facades\DB::table('goyzer_properties');
         
-        if (!$result || !isset($result['GetPropertiesData'])) {
+        $allData = $query->get()->map(fn($item) => json_decode($item->data, true))->toArray();
+        
+        if (empty($allData)) {
             return new LengthAwarePaginator(collect(), 0, $recordsPerPage, $page);
         }
 
-        $properties = is_array($result['GetPropertiesData']) && isset($result['GetPropertiesData'][0]) 
-            ? $result['GetPropertiesData'] 
-            : [$result['GetPropertiesData']];
-
-        $collection = collect($properties)->mapWithKeys(function ($property, $index) {
+        $collection = collect($allData)->mapWithKeys(function ($property, $index) {
             return [$property['code'] ?? $index => $property];
         });
 
@@ -247,16 +323,10 @@ class ListProperties extends Page implements HasTable
 
     protected function getCommunityOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getProperties();
-        
-        if (!$result || !isset($result['GetPropertiesData'])) {
-            return [];
-        }
-
-        $properties = is_array($result['GetPropertiesData']) && isset($result['GetPropertiesData'][0]) 
-            ? $result['GetPropertiesData'] 
-            : [$result['GetPropertiesData']];
+        $properties = \Illuminate\Support\Facades\DB::table('goyzer_properties')
+            ->get()
+            ->map(fn($item) => json_decode($item->data, true))
+            ->toArray();
 
         return collect($properties)
             ->pluck('Community')
@@ -269,134 +339,38 @@ class ListProperties extends Page implements HasTable
 
     protected function getCountryOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getProperties();
-        
-        if (!$result || !isset($result['GetPropertiesData'])) {
-            return [];
-        }
-
-        $properties = is_array($result['GetPropertiesData']) && isset($result['GetPropertiesData'][0]) 
-            ? $result['GetPropertiesData'] 
-            : [$result['GetPropertiesData']];
-
-        return collect($properties)
-            ->pluck('Country')
-            ->filter(fn($item) => is_string($item) && !empty($item))
-            ->unique()
-            ->sort()
-            ->mapWithKeys(fn($item) => [$item => $item])
-            ->toArray();
+        $properties = \Illuminate\Support\Facades\DB::table('goyzer_properties')->get()->map(fn($item) => json_decode($item->data, true))->toArray();
+        return collect($properties)->pluck('Country')->filter(fn($item) => is_string($item) && !empty($item))->unique()->sort()->mapWithKeys(fn($item) => [$item => $item])->toArray();
     }
 
     protected function getStateOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getProperties();
-        
-        if (!$result || !isset($result['GetPropertiesData'])) {
-            return [];
-        }
-
-        $properties = is_array($result['GetPropertiesData']) && isset($result['GetPropertiesData'][0]) 
-            ? $result['GetPropertiesData'] 
-            : [$result['GetPropertiesData']];
-
-        return collect($properties)
-            ->pluck('State')
-            ->filter(fn($item) => is_string($item) && !empty($item))
-            ->unique()
-            ->sort()
-            ->mapWithKeys(fn($item) => [$item => $item])
-            ->toArray();
+        $properties = \Illuminate\Support\Facades\DB::table('goyzer_properties')->get()->map(fn($item) => json_decode($item->data, true))->toArray();
+        return collect($properties)->pluck('State')->filter(fn($item) => is_string($item) && !empty($item))->unique()->sort()->mapWithKeys(fn($item) => [$item => $item])->toArray();
     }
 
     protected function getCityOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getProperties();
-        
-        if (!$result || !isset($result['GetPropertiesData'])) {
-            return [];
-        }
-
-        $properties = is_array($result['GetPropertiesData']) && isset($result['GetPropertiesData'][0]) 
-            ? $result['GetPropertiesData'] 
-            : [$result['GetPropertiesData']];
-
-        return collect($properties)
-            ->pluck('CityName')
-            ->filter(fn($item) => is_string($item) && !empty($item))
-            ->unique()
-            ->sort()
-            ->mapWithKeys(fn($item) => [$item => $item])
-            ->toArray();
+        $properties = \Illuminate\Support\Facades\DB::table('goyzer_properties')->get()->map(fn($item) => json_decode($item->data, true))->toArray();
+        return collect($properties)->pluck('CityName')->filter(fn($item) => is_string($item) && !empty($item))->unique()->sort()->mapWithKeys(fn($item) => [$item => $item])->toArray();
     }
 
     protected function getStatusOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getProperties();
-        
-        if (!$result || !isset($result['GetPropertiesData'])) {
-            return [];
-        }
-
-        $properties = is_array($result['GetPropertiesData']) && isset($result['GetPropertiesData'][0]) 
-            ? $result['GetPropertiesData'] 
-            : [$result['GetPropertiesData']];
-
-        return collect($properties)
-            ->pluck('Status')
-            ->filter(fn($item) => is_string($item) && !empty($item))
-            ->unique()
-            ->sort()
-            ->mapWithKeys(fn($item) => [$item => $item])
-            ->toArray();
+        $properties = \Illuminate\Support\Facades\DB::table('goyzer_properties')->get()->map(fn($item) => json_decode($item->data, true))->toArray();
+        return collect($properties)->pluck('Status')->filter(fn($item) => is_string($item) && !empty($item))->unique()->sort()->mapWithKeys(fn($item) => [$item => $item])->toArray();
     }
 
     protected function getCategoryOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getProperties();
-        
-        if (!$result || !isset($result['GetPropertiesData'])) {
-            return [];
-        }
-
-        $properties = is_array($result['GetPropertiesData']) && isset($result['GetPropertiesData'][0]) 
-            ? $result['GetPropertiesData'] 
-            : [$result['GetPropertiesData']];
-
-        return collect($properties)
-            ->pluck('Category')
-            ->filter(fn($item) => is_string($item) && !empty($item))
-            ->unique()
-            ->sort()
-            ->mapWithKeys(fn($item) => [$item => $item])
-            ->toArray();
+        $properties = \Illuminate\Support\Facades\DB::table('goyzer_properties')->get()->map(fn($item) => json_decode($item->data, true))->toArray();
+        return collect($properties)->pluck('Category')->filter(fn($item) => is_string($item) && !empty($item))->unique()->sort()->mapWithKeys(fn($item) => [$item => $item])->toArray();
     }
 
     protected function getAgentOptions(): array
     {
-        $goyzerService = app(GoyzerService::class);
-        $result = $goyzerService->getProperties();
-        
-        if (!$result || !isset($result['GetPropertiesData'])) {
-            return [];
-        }
-
-        $properties = is_array($result['GetPropertiesData']) && isset($result['GetPropertiesData'][0]) 
-            ? $result['GetPropertiesData'] 
-            : [$result['GetPropertiesData']];
-
-        return collect($properties)
-            ->pluck('Agent')
-            ->filter(fn($item) => is_string($item) && !empty($item))
-            ->unique()
-            ->sort()
-            ->mapWithKeys(fn($item) => [$item => $item])
-            ->toArray();
+        $properties = \Illuminate\Support\Facades\DB::table('goyzer_properties')->get()->map(fn($item) => json_decode($item->data, true))->toArray();
+        return collect($properties)->pluck('Agent')->filter(fn($item) => is_string($item) && !empty($item))->unique()->sort()->mapWithKeys(fn($item) => [$item => $item])->toArray();
     }
 
     protected function applyDateFilter($collection, array $dateFilter)

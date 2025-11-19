@@ -12,7 +12,7 @@ class NationalityResource extends Resource
 {
     protected static ?string $model = \App\Models\Nationality::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFlag;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Nationalities';
 
     public static function getPages(): array

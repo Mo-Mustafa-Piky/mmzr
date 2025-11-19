@@ -12,7 +12,7 @@ class BedroomResource extends Resource
 {
     protected static ?string $model = \App\Models\Bedroom::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
-    protected static string | UnitEnum | null $navigationGroup = 'Goyzer Data';
+    protected static string | UnitEnum | null $navigationGroup = 'Goyzer CRM';
     protected static ?string $navigationLabel = 'Bedrooms';
 
     public static function getPages(): array
