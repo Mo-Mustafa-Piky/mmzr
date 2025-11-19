@@ -27,23 +27,23 @@ class GoyzerService
         $defaultParams = [
             'AccessCode' => $this->accessCode,
             'GroupCode' => $this->groupCode,
-            'Bedrooms' => 0,
-            'StartPriceRange' => 0,
-            'EndPriceRange' => 999999999,
-            'CategoryID' => 0,
-            'SpecialProjects' => 0,
-            'CountryID' => 1,
-            'StateID' => 0,
-            'CommunityID' => 0,
-            'DistrictID' => 0,
-            'FloorAreaMin' => 0,
-            'FloorAreaMax' => 999999,
-            'UnitCategory' => 0,
-            'PropertyID' => 0,
-            'UnitID' => 0,
-            'BedroomsMax' => 10,
-            'ReadyNow' => 0,
-            'PageIndex' => 1,
+            'Bedrooms' => '',
+            'StartPriceRange' => '',
+            'EndPriceRange' => '',
+            'CategoryID' => '',
+            'SpecialProjects' => '',
+            'CountryID' => '',
+            'StateID' => '',
+            'CommunityID' => '',
+            'DistrictID' => '',
+            'FloorAreaMin' => '',
+            'FloorAreaMax' => '',
+            'UnitCategory' => '',
+            'PropertyID' => '',
+            'UnitID' => '',
+            'BedroomsMax' => '',
+            'ReadyNow' => '',
+            'PageIndex' => '',
         ];
 
         $params = array_merge($defaultParams, $params);
@@ -59,30 +59,59 @@ class GoyzerService
         $defaultParams = [
             'AccessCode' => $this->accessCode,
             'GroupCode' => $this->groupCode,
-            'PropertyType' => 'Residential',
-            'Bedrooms' => 0,
-            'Unit_pk' => 0,
-            'State_pk' => '',
-            'Community_pk' => '',
-            'StartPriceRange' => 0,
-            'EndPriceRange' => 999999999,
-            'categoryID' => 0,
-            'CountryID' => 1,
-            'StateID' => 0,
-            'CommunityID' => 0,
-            'FloorAreaMin' => 0,
-            'FloorAreaMax' => 999999,
-            'UnitCategory' => 0,
-            'UnitID' => 0,
-            'BedroomsMax' => 10,
-            'PropertyID' => 0,
-            'ReadyNow' => 0,
-            'PageIndex' => 1,
+            'PropertyType' => '',
+            'Bedrooms' => '',
+            'StartPriceRange' => '',
+            'EndPriceRange' => '',
+            'categoryID' => '',
+            'CountryID' => '',
+            'StateID' => '',
+            'CommunityID' => '',
+            'FloorAreaMin' => '',
+            'FloorAreaMax' => '',
+            'UnitCategory' => '',
+            'UnitID' => '',
+            'BedroomsMax' => '',
+            'PropertyID' => '',
+            'ReadyNow' => '',
+            'PageIndex' => '',
         ];
 
         $params = array_merge($defaultParams, $params);
 
         return $this->makeRequest('RentListings', $params);
+    }
+
+    /**
+     * Get all sold listings
+     */
+    public function getSoldListings($params = [])
+    {
+        $defaultParams = [
+            'AccessCode' => $this->accessCode,
+            'GroupCode' => $this->groupCode,
+            'Bedrooms' => '',
+            'StartPriceRange' => '',
+            'EndPriceRange' => '',
+            'CategoryID' => '',
+            'SpecialProjects' => '',
+            'CountryID' => '',
+            'StateID' => '',
+            'CommunityID' => '',
+            'DistrictID' => '',
+            'FloorAreaMin' => '',
+            'FloorAreaMax' => '',
+            'UnitCategory' => '',
+            'PropertyID' => '',
+            'UnitID' => '',
+            'BedroomsMax' => '',
+            'ReadyNow' => '',
+            'PageIndex' => '',
+        ];
+
+        $params = array_merge($defaultParams, $params);
+
+        return $this->makeRequest('SoldListings', $params);
     }
 
     /**
@@ -109,6 +138,19 @@ class GoyzerService
         ];
 
         return $this->makeRequest('GetUpdatedUnitsForLease', $params);
+    }
+
+    /**
+     * Get projects updated in last 24 hours
+     */
+    public function getProjectsLastUpdated()
+    {
+        $params = [
+            'AccessCode' => $this->accessCode,
+            'GroupCode' => $this->groupCode,
+        ];
+
+        return $this->makeRequest('GetUpdatedProjectsForSales', $params);
     }
 
     /**
@@ -472,6 +514,19 @@ class GoyzerService
         ];
 
         return $this->makeRequest('GetProperties', $params);
+    }
+
+    /**
+     * Insert contact
+     */
+    public function insertContact($data)
+    {
+        $params = array_merge([
+            'AccessCode' => $this->accessCode,
+            'GroupCode' => $this->groupCode,
+        ], $data);
+
+        return $this->makeRequest('ContactInsert', $params);
     }
 
     /**

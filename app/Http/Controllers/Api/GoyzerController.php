@@ -443,4 +443,70 @@ class GoyzerController extends Controller
         
         return response()->json($result);
     }
+
+    /**
+     * Get updated units for sales from Goyzer (cached for 1 hour)
+     */
+    public function getUpdatedUnitsForSales()
+    {
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_updated_units_sales', 3600, function () {
+            return $this->goyzer->getSalesListingsLastUpdated();
+        });
+        
+        return response()->json($result);
+    }
+
+    /**
+     * Get updated units for rentals from Goyzer (cached for 1 hour)
+     */
+    public function getUpdatedUnitsForRentals()
+    {
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_updated_units_rentals', 3600, function () {
+            return $this->goyzer->getRentalListingsLastUpdated();
+        });
+        
+        return response()->json($result);
+    }
+
+    /**
+     * Get updated projects from Goyzer (cached for 1 hour)
+     */
+    public function getUpdatedProjectsForSales()
+    {
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_updated_projects', 3600, function () {
+            return $this->goyzer->getProjectsLastUpdated();
+        });
+        
+        return response()->json($result);
+    }
+
+    /**
+     * Get sales listings from Goyzer with filters
+     */
+    public function getSalesListings(\Illuminate\Http\Request $request)
+    {
+        $params = [
+            'Bedrooms' => $request->get('bedrooms', ''),
+            'StartPriceRange' => $request->get('start_price', ''),
+            'EndPriceRange' => $request->get('end_price', ''),
+            'CategoryID' => $request->get('category_id', ''),
+            'SpecialProjects' => $request->get('special_projects', ''),
+            'CountryID' => $request->get('country_id', ''),
+            'StateID' => $request->get('state_id', ''),
+            'CommunityID' => $request->get('community_id', ''),
+            'DistrictID' => $request->get('district_id', ''),
+            'FloorAreaMin' => $request->get('floor_area_min', ''),
+            'FloorAreaMax' => $request->get('floor_area_max', ''),
+            'UnitCategory' => $request->get('unit_category', ''),
+            'PropertyID' => $request->get('property_id', ''),
+            'UnitID' => $request->get('unit_id', ''),
+            'BedroomsMax' => $request->get('bedrooms_max', ''),
+            'ReadyNow' => $request->get('ready_now', ''),
+            'PageIndex' => $request->get('page_index', ''),
+        ];
+        
+        $result = $this->goyzer->getSalesListings($params);
+        
+        return response()->json($result);
+    }
 }

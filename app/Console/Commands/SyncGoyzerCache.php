@@ -34,6 +34,13 @@ class SyncGoyzerCache extends Command
         Cache::forget('goyzer_unit_categories');
         Cache::forget('goyzer_unit_sub_types');
         Cache::forget('goyzer_unit_views');
+        Cache::forget('goyzer_updated_units_sales');
+        Cache::forget('goyzer_updated_units_rentals');
+        Cache::forget('goyzer_updated_projects');
+        Cache::forget('goyzer_sales_listings');
+        Cache::forget('goyzer_properties');
+        Cache::forget('goyzer_rental_listings');
+        Cache::forget('goyzer_sold_listings');
         
         $this->info('Refreshing cache...');
         
@@ -56,6 +63,13 @@ class SyncGoyzerCache extends Command
         Cache::remember('goyzer_unit_categories', 3600, fn() => $goyzerService->getUnitCategory());
         Cache::remember('goyzer_unit_sub_types', 3600, fn() => $goyzerService->getUnitSubType());
         Cache::remember('goyzer_unit_views', 3600, fn() => $goyzerService->getUnitView());
+        Cache::remember('goyzer_updated_units_sales', 3600, fn() => $goyzerService->getSalesListingsLastUpdated());
+        Cache::remember('goyzer_updated_units_rentals', 3600, fn() => $goyzerService->getRentalListingsLastUpdated());
+        Cache::remember('goyzer_updated_projects', 3600, fn() => $goyzerService->getProjectsLastUpdated());
+        Cache::remember('goyzer_sales_listings', 3600, fn() => $goyzerService->getSalesListings());
+        Cache::remember('goyzer_properties', 3600, fn() => $goyzerService->getProperties());
+        Cache::remember('goyzer_rental_listings', 3600, fn() => $goyzerService->getRentalListings());
+        Cache::remember('goyzer_sold_listings', 3600, fn() => $goyzerService->getSoldListings());
         
         $this->info('Goyzer cache synced successfully!');
         
