@@ -266,7 +266,7 @@ class ContactForm
 
     protected static function getCountryOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_countries', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_countries', function () {
             return app(GoyzerService::class)->getCountry();
         });
         
@@ -283,7 +283,7 @@ class ContactForm
 
     protected static function getStateOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_states', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_states', function () {
             return app(GoyzerService::class)->getStates();
         });
         
@@ -300,7 +300,7 @@ class ContactForm
 
     protected static function getCityOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_cities', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_cities', function () {
             return app(GoyzerService::class)->getCities();
         });
         
@@ -317,7 +317,7 @@ class ContactForm
 
     protected static function getCommunityOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_communities', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_communities', function () {
             return app(GoyzerService::class)->getCommunities();
         });
         
@@ -334,7 +334,7 @@ class ContactForm
 
     protected static function getNationalityOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_nationalities', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_nationalities', function () {
             return app(GoyzerService::class)->getNationality();
         });
         
@@ -351,7 +351,7 @@ class ContactForm
 
     protected static function getTitleOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_titles', 3600, fn() => app(GoyzerService::class)->getTitle());
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_titles', fn() => app(GoyzerService::class)->getTitle());
         if (!$result || !isset($result['GetTitleData'])) return [];
         $titles = is_array($result['GetTitleData']) && isset($result['GetTitleData'][0]) ? $result['GetTitleData'] : [$result['GetTitleData']];
         $options = [];
@@ -363,7 +363,7 @@ class ContactForm
 
     protected static function getDistrictOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_districts', 3600, fn() => app(GoyzerService::class)->getDistricts());
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_districts', fn() => app(GoyzerService::class)->getDistricts());
         if (!$result || !isset($result['GetDistrictsData'])) return [];
         $districts = is_array($result['GetDistrictsData']) && isset($result['GetDistrictsData'][0]) ? $result['GetDistrictsData'] : [$result['GetDistrictsData']];
         $options = [];
@@ -375,7 +375,7 @@ class ContactForm
 
     protected static function getSubCommunityOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_sub_communities', 3600, fn() => app(GoyzerService::class)->getSubCommunity());
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_sub_communities', fn() => app(GoyzerService::class)->getSubCommunity());
         if (!$result || !isset($result['GetSubCommunityData'])) return [];
         $subCommunities = is_array($result['GetSubCommunityData']) && isset($result['GetSubCommunityData'][0]) ? $result['GetSubCommunityData'] : [$result['GetSubCommunityData']];
         $options = [];
@@ -387,7 +387,7 @@ class ContactForm
 
     protected static function getRequirementTypeOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_requirement_types', 3600, fn() => app(GoyzerService::class)->getRequirementType());
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_requirement_types', fn() => app(GoyzerService::class)->getRequirementType());
         if (!$result || !isset($result['GetRequirementTypeData'])) return [];
         $types = is_array($result['GetRequirementTypeData']) && isset($result['GetRequirementTypeData'][0]) ? $result['GetRequirementTypeData'] : [$result['GetRequirementTypeData']];
         $options = [];
@@ -399,7 +399,7 @@ class ContactForm
 
     protected static function getUnitCategoryOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_unit_categories', 3600, fn() => app(GoyzerService::class)->getUnitCategory());
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_unit_categories', fn() => app(GoyzerService::class)->getUnitCategory());
         if (!$result || !isset($result['GetUnitCategoryData'])) return [];
         $categories = is_array($result['GetUnitCategoryData']) && isset($result['GetUnitCategoryData'][0]) ? $result['GetUnitCategoryData'] : [$result['GetUnitCategoryData']];
         $options = [];
@@ -411,7 +411,7 @@ class ContactForm
 
     protected static function getContactMethodOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_contact_methods', 3600, fn() => app(GoyzerService::class)->getContactMethods());
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_contact_methods', fn() => app(GoyzerService::class)->getContactMethods());
         if (!$result || !isset($result['GetContactMethodsData'])) return [];
         $methods = is_array($result['GetContactMethodsData']) && isset($result['GetContactMethodsData'][0]) ? $result['GetContactMethodsData'] : [$result['GetContactMethodsData']];
         $options = [];
@@ -423,7 +423,7 @@ class ContactForm
 
     protected static function getAgentOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_agents', 3600, fn() => app(GoyzerService::class)->getAgents());
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_agents', fn() => app(GoyzerService::class)->getAgents());
         if (!$result || !isset($result['GetAgentData'])) return [];
         $agents = is_array($result['GetAgentData']) && isset($result['GetAgentData'][0]) ? $result['GetAgentData'] : [$result['GetAgentData']];
         $options = [];
@@ -435,7 +435,7 @@ class ContactForm
 
     protected static function getPropertyOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_properties', 3600, fn() => app(GoyzerService::class)->getProperties());
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_properties', fn() => app(GoyzerService::class)->getProperties());
         if (!$result || !isset($result['GetPropertiesData'])) return [];
         $properties = is_array($result['GetPropertiesData']) && isset($result['GetPropertiesData'][0]) ? $result['GetPropertiesData'] : [$result['GetPropertiesData']];
         $options = [];
@@ -447,7 +447,7 @@ class ContactForm
 
     protected static function getUnitOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_sales_units', 3600, fn() => app(GoyzerService::class)->getSalesListings());
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_sales_units', fn() => app(GoyzerService::class)->getSalesListings());
         if (!$result || !isset($result['GetSalesListingsData'])) return [];
         $units = is_array($result['GetSalesListingsData']) && isset($result['GetSalesListingsData'][0]) ? $result['GetSalesListingsData'] : [$result['GetSalesListingsData']];
         $options = [];

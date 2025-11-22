@@ -55,7 +55,7 @@ class ListNationalities extends Page implements HasTable
 
     protected function getNationalitiesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_nationalities', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_nationalities', function () {
             return app(GoyzerService::class)->getNationality();
         });
         

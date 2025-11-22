@@ -142,7 +142,7 @@ class ListSalesListings extends Page implements HasTable
 
     protected function getSalesListingsData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_sales_listings', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_sales_listings', function () {
             return app(GoyzerService::class)->getSalesListings();
         });
         
@@ -208,7 +208,7 @@ class ListSalesListings extends Page implements HasTable
 
     protected function getCountryOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_countries', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_countries', function () {
             return app(GoyzerService::class)->getCountry();
         });
         
@@ -237,7 +237,7 @@ class ListSalesListings extends Page implements HasTable
 
     protected function getStateOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_states', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_states', function () {
             return app(GoyzerService::class)->getStates();
         });
         
@@ -254,7 +254,7 @@ class ListSalesListings extends Page implements HasTable
 
     protected function getCommunityOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_communities', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_communities', function () {
             return app(GoyzerService::class)->getCommunities();
         });
         
@@ -271,7 +271,7 @@ class ListSalesListings extends Page implements HasTable
 
     protected function getCategoryOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_sales_listings', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_sales_listings', function () {
             return app(GoyzerService::class)->getSalesListings();
         });
         
@@ -290,7 +290,7 @@ class ListSalesListings extends Page implements HasTable
 
     protected function getStatusOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_sales_listings', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_sales_listings', function () {
             return app(GoyzerService::class)->getSalesListings();
         });
         

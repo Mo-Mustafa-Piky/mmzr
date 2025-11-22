@@ -55,7 +55,7 @@ class ListTitles extends Page implements HasTable
 
     protected function getTitlesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_titles', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_titles', function () {
             return app(GoyzerService::class)->getTitle();
         });
         

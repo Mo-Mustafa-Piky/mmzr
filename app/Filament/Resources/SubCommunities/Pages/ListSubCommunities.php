@@ -67,7 +67,7 @@ class ListSubCommunities extends Page implements HasTable
 
     protected function getSubCommunitiesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_sub_communities', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_sub_communities', function () {
             $goyzerService = app(GoyzerService::class);
             return $goyzerService->getSubCommunity();
         });
@@ -103,7 +103,7 @@ class ListSubCommunities extends Page implements HasTable
 
     protected function getCommunityName(string $communityId): string
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_communities', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_communities', function () {
             return app(GoyzerService::class)->getCommunities();
         });
         
@@ -119,7 +119,7 @@ class ListSubCommunities extends Page implements HasTable
 
     protected function getCommunityOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_communities', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_communities', function () {
             return app(GoyzerService::class)->getCommunities();
         });
         

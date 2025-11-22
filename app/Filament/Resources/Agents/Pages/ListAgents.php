@@ -82,7 +82,7 @@ class ListAgents extends Page implements HasTable
 
     protected function getAgentsData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_agents', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_agents', function () {
             return app(GoyzerService::class)->getAgents();
         });
         

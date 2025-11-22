@@ -44,32 +44,32 @@ class SyncGoyzerCache extends Command
         
         $this->info('Refreshing cache...');
         
-        Cache::remember('goyzer_agents', 3600, fn() => $goyzerService->getAgents());
-        Cache::remember('goyzer_amenities', 3600, fn() => $goyzerService->getAmenities());
-        Cache::remember('goyzer_bedrooms', 3600, fn() => $goyzerService->getBedrooms());
-        Cache::remember('goyzer_budgets', 3600, fn() => $goyzerService->getBudget());
-        Cache::remember('goyzer_budgets_by_country', 3600, fn() => $goyzerService->getBudgetByCountry());
-        Cache::remember('goyzer_cities', 3600, fn() => $goyzerService->getCities());
-        Cache::remember('goyzer_communities', 3600, fn() => $goyzerService->getCommunities());
-        Cache::remember('goyzer_contact_methods', 3600, fn() => $goyzerService->getContactMethods());
-        Cache::remember('goyzer_countries', 3600, fn() => $goyzerService->getCountry());
-        Cache::remember('goyzer_districts', 3600, fn() => $goyzerService->getDistricts());
-        Cache::remember('goyzer_facilities', 3600, fn() => $goyzerService->getFacility());
-        Cache::remember('goyzer_nationalities', 3600, fn() => $goyzerService->getNationality());
-        Cache::remember('goyzer_requirement_types', 3600, fn() => $goyzerService->getRequirementType());
-        Cache::remember('goyzer_states', 3600, fn() => $goyzerService->getStates());
-        Cache::remember('goyzer_sub_communities', 3600, fn() => $goyzerService->getSubCommunity());
-        Cache::remember('goyzer_titles', 3600, fn() => $goyzerService->getTitle());
-        Cache::remember('goyzer_unit_categories', 3600, fn() => $goyzerService->getUnitCategory());
-        Cache::remember('goyzer_unit_sub_types', 3600, fn() => $goyzerService->getUnitSubType());
-        Cache::remember('goyzer_unit_views', 3600, fn() => $goyzerService->getUnitView());
-        Cache::remember('goyzer_updated_units_sales', 3600, fn() => $goyzerService->getSalesListingsLastUpdated());
-        Cache::remember('goyzer_updated_units_rentals', 3600, fn() => $goyzerService->getRentalListingsLastUpdated());
-        Cache::remember('goyzer_updated_projects', 3600, fn() => $goyzerService->getProjectsLastUpdated());
-        Cache::remember('goyzer_sales_listings', 3600, fn() => $goyzerService->getSalesListings());
-        Cache::remember('goyzer_properties', 3600, fn() => $goyzerService->getProperties());
-        Cache::remember('goyzer_rental_listings', 3600, fn() => $goyzerService->getRentalListings());
-        Cache::remember('goyzer_sold_listings', 3600, fn() => $goyzerService->getSoldListings());
+        Cache::rememberForever('goyzer_agents', fn() => $goyzerService->getAgents());
+        Cache::rememberForever('goyzer_amenities', fn() => $goyzerService->getAmenities());
+        Cache::rememberForever('goyzer_bedrooms', fn() => $goyzerService->getBedrooms());
+        Cache::rememberForever('goyzer_budgets', fn() => $goyzerService->getBudget());
+        Cache::rememberForever('goyzer_budgets_by_country', fn() => $goyzerService->getBudgetByCountry());
+        Cache::rememberForever('goyzer_cities', fn() => $goyzerService->getCities());
+        Cache::rememberForever('goyzer_communities', fn() => $goyzerService->getCommunities());
+        Cache::rememberForever('goyzer_contact_methods', fn() => $goyzerService->getContactMethods());
+        Cache::rememberForever('goyzer_countries', fn() => $goyzerService->getCountry());
+        Cache::rememberForever('goyzer_districts', fn() => $goyzerService->getDistricts());
+        Cache::rememberForever('goyzer_facilities', fn() => $goyzerService->getFacility());
+        Cache::rememberForever('goyzer_nationalities', fn() => $goyzerService->getNationality());
+        Cache::rememberForever('goyzer_requirement_types', fn() => $goyzerService->getRequirementType());
+        Cache::rememberForever('goyzer_states', fn() => $goyzerService->getStates());
+        Cache::rememberForever('goyzer_sub_communities', fn() => $goyzerService->getSubCommunity());
+        Cache::rememberForever('goyzer_titles', fn() => $goyzerService->getTitle());
+        Cache::rememberForever('goyzer_unit_categories', fn() => $goyzerService->getUnitCategory());
+        Cache::rememberForever('goyzer_unit_sub_types', fn() => $goyzerService->getUnitSubType());
+        Cache::rememberForever('goyzer_unit_views', fn() => $goyzerService->getUnitView());
+        Cache::rememberForever('goyzer_updated_units_sales', fn() => $goyzerService->getSalesListingsLastUpdated());
+        Cache::rememberForever('goyzer_updated_units_rentals', fn() => $goyzerService->getRentalListingsLastUpdated());
+        Cache::rememberForever('goyzer_updated_projects', fn() => $goyzerService->getProjectsLastUpdated());
+        Cache::rememberForever('goyzer_sales_listings', fn() => $goyzerService->getSalesListings());
+        Cache::rememberForever('goyzer_properties', fn() => $goyzerService->getProperties());
+        Cache::rememberForever('goyzer_rental_listings', fn() => $goyzerService->getRentalListings());
+        Cache::rememberForever('goyzer_sold_listings', fn() => $goyzerService->getSoldListings());
         
         $this->info('Goyzer cache synced successfully!');
         

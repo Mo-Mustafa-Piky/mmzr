@@ -68,7 +68,7 @@ class ListCities extends Page implements HasTable
 
     protected function getCitiesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_cities', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_cities', function () {
             $goyzerService = app(GoyzerService::class);
             return $goyzerService->getCities();
         });
@@ -112,7 +112,7 @@ class ListCities extends Page implements HasTable
 
     protected function getStateName(string $stateId): string
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_states', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_states', function () {
             return app(GoyzerService::class)->getStates();
         });
         
@@ -128,7 +128,7 @@ class ListCities extends Page implements HasTable
 
     protected function getStateOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_states', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_states', function () {
             return app(GoyzerService::class)->getStates();
         });
         

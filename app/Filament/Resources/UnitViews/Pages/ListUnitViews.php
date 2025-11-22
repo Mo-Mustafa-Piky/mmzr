@@ -55,7 +55,7 @@ class ListUnitViews extends Page implements HasTable
 
     protected function getUnitViewsData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_unit_views', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_unit_views', function () {
             return app(GoyzerService::class)->getUnitView();
         });
         

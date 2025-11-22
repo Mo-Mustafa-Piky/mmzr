@@ -75,7 +75,7 @@ class ListCommunities extends Page implements HasTable
 
     protected function getCommunitiesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_communities', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_communities', function () {
             return app(GoyzerService::class)->getCommunities();
         });
         
@@ -111,7 +111,7 @@ class ListCommunities extends Page implements HasTable
 
     protected function getDistrictName(string $districtId): string
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_districts', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_districts', function () {
             return app(GoyzerService::class)->getDistricts();
         });
         
@@ -134,7 +134,7 @@ class ListCommunities extends Page implements HasTable
 
     protected function getDistrictOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_districts', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_districts', function () {
             return app(GoyzerService::class)->getDistricts();
         });
         

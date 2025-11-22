@@ -58,7 +58,7 @@ class ListCountries extends Page implements HasTable
 
     protected function getCountriesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_countries', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_countries', function () {
             $goyzerService = app(GoyzerService::class);
             return $goyzerService->getCountry();
         });

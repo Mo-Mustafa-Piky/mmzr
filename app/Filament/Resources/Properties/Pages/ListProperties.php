@@ -72,7 +72,7 @@ class ListProperties extends Page implements HasTable
 
     protected function getPropertiesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_properties', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_properties', function () {
             return app(GoyzerService::class)->getProperties();
         });
         

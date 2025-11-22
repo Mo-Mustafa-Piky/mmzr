@@ -68,7 +68,7 @@ class ListStates extends Page implements HasTable
 
     protected function getStatesData(?string $search = null, array $filters = [], int $page = 1, int $recordsPerPage = 10): LengthAwarePaginator
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_states', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_states', function () {
             $goyzerService = app(GoyzerService::class);
             return $goyzerService->getStates();
         });
@@ -112,7 +112,7 @@ class ListStates extends Page implements HasTable
 
     protected function getCountryName(string $countryId): string
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_countries', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_countries', function () {
             return app(GoyzerService::class)->getCountry();
         });
         
@@ -128,7 +128,7 @@ class ListStates extends Page implements HasTable
 
     protected function getCountryOptions(): array
     {
-        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_countries', 3600, function () {
+        $result = \Illuminate\Support\Facades\Cache::rememberForever('goyzer_countries', function () {
             return app(GoyzerService::class)->getCountry();
         });
         
