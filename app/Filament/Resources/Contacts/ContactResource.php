@@ -35,7 +35,9 @@ class ContactResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\UtmsRelationManager::class,
+            RelationManagers\FeedbacksRelationManager::class,
+            RelationManagers\DirectMarketingsRelationManager::class,
         ];
     }
 

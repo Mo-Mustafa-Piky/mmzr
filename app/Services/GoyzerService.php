@@ -530,6 +530,51 @@ class GoyzerService
     }
 
     /**
+     * Insert contact with UTM parameters
+     */
+    public function insertContactUtm($data)
+    {
+        $params = array_merge([
+            'AccessCode' => $this->accessCode,
+            'GroupCode' => $this->groupCode,
+        ], $data);
+
+        return $this->makeRequest('ContactInsertUtm', $params);
+    }
+
+    /**
+     * Update agent feedback rating
+     */
+    public function updateAgentFeedbackRating($leadId, $feedbackId, $remarks = '')
+    {
+        $params = [
+            'AccessCode' => $this->accessCode,
+            'GroupCode' => $this->groupCode,
+            'LeadID' => $leadId,
+            'FeedBackID' => $feedbackId,
+            'Remarks' => $remarks,
+        ];
+
+        return $this->makeRequest('UpdateAgentfeedbackRating', $params);
+    }
+
+    /**
+     * Update direct marketing preferences
+     */
+    public function updateDirectMarketing($contactId, $contactEmail, $updateValues)
+    {
+        $params = [
+            'AccessCode' => $this->accessCode,
+            'GroupCode' => $this->groupCode,
+            'ContactID' => $contactId,
+            'ContactEmail' => $contactEmail,
+            'UpdateValues' => $updateValues,
+        ];
+
+        return $this->makeRequest('UpdateDirectMarketing', $params);
+    }
+
+    /**
      * Test API connection
      */
     public function testConnection()

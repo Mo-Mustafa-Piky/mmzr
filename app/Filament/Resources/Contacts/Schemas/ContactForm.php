@@ -50,6 +50,9 @@ class ContactForm
                                     ])
                                     ->label('Contact Type')
                                     ->default('Individual'),
+                                TextInput::make('contact_sub_type')
+                                    ->label('Contact Sub Type')
+                                    ->maxLength(255),
                                 TextInput::make('company')
                                     ->label('Company')
                                     ->maxLength(255)
@@ -162,6 +165,11 @@ class ContactForm
                                     ->options(self::getPropertyOptions())
                                     ->searchable()
                                     ->preload(),
+                                Select::make('unit_id')
+                                    ->label('Unit')
+                                    ->options(self::getUnitOptions())
+                                    ->searchable()
+                                    ->preload(),
                                 Select::make('unit_type')
                                     ->label('Unit Type')
                                     ->options(self::getUnitCategoryOptions())
@@ -237,8 +245,9 @@ class ContactForm
                                     ->label('Activity Time')
                                     ->type('time'),
                                 TextInput::make('activity_type_id')
-                                    ->label('Activity Type ID')
-                                    ->maxLength(255),
+                                    ->label('Activity Type')
+                                    ->maxLength(255)
+                                    ->helperText('No activity types available from API'),
                                 TextInput::make('activity_subject')
                                     ->label('Activity Subject')
                                     ->maxLength(255)
@@ -432,6 +441,19 @@ class ContactForm
         $options = [];
         foreach ($properties as $property) {
             $options[$property['PropertyID'] ?? ''] = $property['PropertyName'] ?? '';
+        }
+        return $options;
+    }
+
+    protected static function getUnitOptions(): array
+    {
+        $result = \Illuminate\Support\Facades\Cache::remember('goyzer_sales_units', 3600, fn() => app(GoyzerService::class)->getSalesListings());
+        if (!$result || !isset($result['GetSalesListingsData'])) return [];
+        $units = is_array($result['GetSalesListingsData']) && isset($result['GetSalesListingsData'][0]) ? $result['GetSalesListingsData'] : [$result['GetSalesListingsData']];
+        $options = [];
+        foreach ($units as $unit) {
+            $unitName = ($unit['PropertyName'] ?? '') . ' - ' . ($unit['RefNo'] ?? '');
+            $options[$unit['UnitID'] ?? ''] = $unitName;
         }
         return $options;
     }
