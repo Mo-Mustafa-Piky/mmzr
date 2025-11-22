@@ -12,6 +12,3 @@ Schedule::command('goyzer:sync-cache')->everySixHours()->onSuccess(function () {
     \Illuminate\Support\Facades\Log::info('Sync with Goyzer done at ' . now());
 });
 
-Schedule::call(function () {
-    \Illuminate\Support\Facades\Log::info('Scheduler is running at ' . now());
-})->everyMinute();
