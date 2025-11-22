@@ -8,7 +8,9 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('goyzer:sync-cache')->everyMinute();
+Schedule::command('goyzer:sync-cache')->everySixHours()->onSuccess(function () {
+    \Illuminate\Support\Facades\Log::info('Sync with Goyzer done at ' . now());
+});
 
 Schedule::call(function () {
     \Illuminate\Support\Facades\Log::info('Scheduler is running at ' . now());
