@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\BlogsBannerController;
 use App\Http\Controllers\Api\HomepageController;
+use App\Http\Controllers\Api\NavbarMenuController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
@@ -52,5 +53,6 @@ Route::get('/homepage', [HomepageController::class, 'index']);
 Route::get('/blogs', [BlogController::class, 'index']);
 Route::get('/blogs/{slug}', [BlogController::class, 'show']);
 Route::get('/blogs-banner', [BlogsBannerController::class, 'index']);
+Route::get('/navbar-menu', [\App\Http\Controllers\Api\NavbarMenuController::class, 'index']);
 
 
