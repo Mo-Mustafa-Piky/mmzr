@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\BlogsBannerController;
+use App\Http\Controllers\Api\HomepageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
@@ -45,38 +48,9 @@ Route::prefix('goyzer')->group(function () {
     Route::post('contact-insert', [GoyzerController::class, 'contactInsert']);
 });
 
-
-/* All Goyzer API Endpoints:
-
-GetAgents ✓
-GetAmenities ✓
-GetBedrooms ✓
-GetBudget ✓
-GetBudgetByCountry ✓
-GetCities ✓
-GetStates ✓
-GetCountry ✓
-GetDistricts ✓
-GetCommunities ✓
-GetSubCommunity ✓
-GetNationality ✓
-GetTitle ✓
-GetRequirementType ✓
-GetContactMethods ✓
-GetUnitCategory ✓
-GetUnitSubType ✓
-GetUnitView ✓
-GetFacility ✓
-GetProperties ✓
-GetUpdatedUnitsForSales ✓
-GetUpdatedUnitsForLease ✓
-GetUpdatedProjectsForSales ✓
-SalesListings ✓
-RentListings ✓
-SoldListings ✓
-ContactInsert ✓
-
-*/
-
+Route::get('/homepage', [HomepageController::class, 'index']);
+Route::get('/blogs', [BlogController::class, 'index']);
+Route::get('/blogs/{slug}', [BlogController::class, 'show']);
+Route::get('/blogs-banner', [BlogsBannerController::class, 'index']);
 
 

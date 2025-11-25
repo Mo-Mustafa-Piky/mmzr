@@ -1,0 +1,501 @@
+{
+	"info": {
+		"name": "MMZR API v1",
+		"description": "API endpoints for MMZR real estate platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000/api/v1",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Content Management",
+			"item": [
+				{
+					"name": "Get Homepage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/homepage",
+							"host": ["{{base_url}}"],
+							"path": ["homepage"]
+						}
+					}
+				},
+				{
+					"name": "Get Blogs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/blogs",
+							"host": ["{{base_url}}"],
+							"path": ["blogs"]
+						}
+					}
+				},
+				{
+					"name": "Get Blog by Slug",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/blogs/:slug",
+							"host": ["{{base_url}}"],
+							"path": ["blogs", ":slug"],
+							"variable": [
+								{
+									"key": "slug",
+									"value": "top-10-real-estate-investment-tips-for-2024"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Blogs Banner",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/blogs-banner",
+							"host": ["{{base_url}}"],
+							"path": ["blogs-banner"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Goyzer",
+			"item": [
+				{
+					"name": "Get Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/properties",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "properties"]
+						}
+					}
+				},
+				{
+					"name": "Get Property by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/properties/:unitPk",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "properties", ":unitPk"],
+							"variable": [
+								{
+									"key": "unitPk",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Sync Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/stats",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "stats"]
+						}
+					}
+				},
+				{
+					"name": "Create Test Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/test-data",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "test-data"]
+						}
+					}
+				},
+				{
+					"name": "Get Reference Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/reference-data",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "reference-data"]
+						}
+					}
+				},
+				{
+					"name": "Get Agents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/agents",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "agents"]
+						}
+					}
+				},
+				{
+					"name": "Get Amenities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/amenities",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "amenities"]
+						}
+					}
+				},
+				{
+					"name": "Get Bedrooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/bedrooms",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "bedrooms"]
+						}
+					}
+				},
+				{
+					"name": "Get Budget",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/budget",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "budget"]
+						}
+					}
+				},
+				{
+					"name": "Get Budget by Country",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/budget-by-country",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "budget-by-country"]
+						}
+					}
+				},
+				{
+					"name": "Get Cities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/cities",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "cities"]
+						}
+					}
+				},
+				{
+					"name": "Get States",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/states",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "states"]
+						}
+					}
+				},
+				{
+					"name": "Get Countries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/countries",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "countries"]
+						}
+					}
+				},
+				{
+					"name": "Get Districts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/districts",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "districts"]
+						}
+					}
+				},
+				{
+					"name": "Get Communities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/communities",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "communities"]
+						}
+					}
+				},
+				{
+					"name": "Get Sub Communities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/sub-communities",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "sub-communities"]
+						}
+					}
+				},
+				{
+					"name": "Get Nationalities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/nationalities",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "nationalities"]
+						}
+					}
+				},
+				{
+					"name": "Get Titles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/titles",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "titles"]
+						}
+					}
+				},
+				{
+					"name": "Get Requirement Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/requirement-types",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "requirement-types"]
+						}
+					}
+				},
+				{
+					"name": "Get Contact Methods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/contact-methods",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "contact-methods"]
+						}
+					}
+				},
+				{
+					"name": "Get Unit Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/unit-categories",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "unit-categories"]
+						}
+					}
+				},
+				{
+					"name": "Get Unit Sub Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/unit-sub-types",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "unit-sub-types"]
+						}
+					}
+				},
+				{
+					"name": "Get Unit Views",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/unit-views",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "unit-views"]
+						}
+					}
+				},
+				{
+					"name": "Get Facilities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/facilities",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "facilities"]
+						}
+					}
+				},
+				{
+					"name": "Get Goyzer Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/get-properties",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "get-properties"]
+						}
+					}
+				},
+				{
+					"name": "Get Updated Units Sales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/updated-units-sales",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "updated-units-sales"]
+						}
+					}
+				},
+				{
+					"name": "Get Updated Units Rentals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/updated-units-rentals",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "updated-units-rentals"]
+						}
+					}
+				},
+				{
+					"name": "Get Updated Projects",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/updated-projects",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "updated-projects"]
+						}
+					}
+				},
+				{
+					"name": "Get Sales Listings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/sales-listings",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "sales-listings"]
+						}
+					}
+				},
+				{
+					"name": "Get Rental Listings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/rental-listings",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "rental-listings"]
+						}
+					}
+				},
+				{
+					"name": "Get Sold Listings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/goyzer/sold-listings",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "sold-listings"]
+						}
+					}
+				},
+				{
+					"name": "Contact Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+971501234567\",\n  \"message\": \"Interested in property\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/goyzer/contact-insert",
+							"host": ["{{base_url}}"],
+							"path": ["goyzer", "contact-insert"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Get User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": ["{{base_url}}"],
+							"path": ["user"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
