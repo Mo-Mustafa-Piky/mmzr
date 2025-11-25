@@ -3,23 +3,26 @@
 namespace App\Services;
 
 use App\Models\BlogsBanner;
+use Illuminate\Support\Facades\Cache;
 
 class BlogsBannerService
 {
     public function getActiveBanner()
     {
-        $banner = BlogsBanner::where('is_active', true)->first();
+        return Cache::rememberForever('blogs_banner', function () {
+            $banner = BlogsBanner::where('is_active', true)->first();
 
-        if (!$banner) {
-            return null;
-        }
+            if (!$banner) {
+                return null;
+            }
 
-        return [
-            'id' => $banner->id,
-            'title' => $banner->title,
-            'button_text' => $banner->button_text,
-            'button_link' => $banner->button_link,
-            'background' => $banner->getFirstMediaUrl('background'),
-        ];
+            return [
+                'id' => $banner->id,
+                'title' => $banner->title,
+                'button_text' => $banner->button_text,
+                'button_link' => $banner->button_link,
+                'background' => $banner->getFirstMediaUrl('background'),
+            ];
+        });
     }
 }

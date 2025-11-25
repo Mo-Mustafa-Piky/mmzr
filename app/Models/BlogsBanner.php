@@ -10,6 +10,17 @@ class BlogsBanner extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
+    protected static function booted()
+    {
+        static::saved(function () {
+            \Cache::forget('blogs_banner');
+        });
+
+        static::deleted(function () {
+            \Cache::forget('blogs_banner');
+        });
+    }
+
     protected $table = 'blogs_banner';
 
     protected $fillable = [

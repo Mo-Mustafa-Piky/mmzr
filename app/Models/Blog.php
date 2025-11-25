@@ -11,6 +11,19 @@ class Blog extends Model implements HasMedia
 {
     use SoftDeletes, InteractsWithMedia;
 
+    protected static function booted()
+    {
+        static::saved(function ($blog) {
+            \Cache::forget('blogs_list');
+            \Cache::forget("blog_{$blog->slug}");
+        });
+
+        static::deleted(function ($blog) {
+            \Cache::forget('blogs_list');
+            \Cache::forget("blog_{$blog->slug}");
+        });
+    }
+
     protected $fillable = [
         'title',
         'slug',
