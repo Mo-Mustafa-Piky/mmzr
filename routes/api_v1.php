@@ -5,6 +5,9 @@ use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\BlogsBannerController;
 use App\Http\Controllers\Api\HomepageController;
 use App\Http\Controllers\Api\NavbarMenuController;
+use App\Http\Controllers\Api\AreaGuidesController;
+use App\Http\Controllers\Api\AwardsController;
+use App\Http\Controllers\Api\FooterFaqController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
@@ -53,6 +56,12 @@ Route::get('/homepage', [HomepageController::class, 'index']);
 Route::get('/blogs', [BlogController::class, 'index']);
 Route::get('/blogs/{slug}', [BlogController::class, 'show']);
 Route::get('/blogs-banner', [BlogsBannerController::class, 'index']);
-Route::get('/navbar-menu', [\App\Http\Controllers\Api\NavbarMenuController::class, 'index']);
+Route::get('/navbar-menu', [NavbarMenuController::class, 'index']);
+Route::get('/area-guides-banner', [AreaGuidesController::class, 'banner']);
+Route::get('/area-guides', [AreaGuidesController::class, 'index']);
+Route::get('/awards-banner', [AwardsController::class, 'banner']);
+Route::get('/awards', [AwardsController::class, 'index']);
+Route::get('/footer', [\App\Http\Controllers\Api\FooterFaqController::class, 'footer']);
+Route::get('/faqs', [\App\Http\Controllers\Api\FooterFaqController::class, 'faqs']);
 
 
